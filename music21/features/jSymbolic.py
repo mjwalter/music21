@@ -1766,6 +1766,13 @@ class StrengthOfStrongestRhythmicPulseFeature(featuresModule.FeatureExtractor):
     >>> fe = features.jSymbolic.StrengthOfStrongestRhythmicPulseFeature(sch)
     >>> fe.extract().vector[0]
     0.853...
+
+    >>> s = corpus.parse('bwv66.6')
+    >>> fe = features.jSymbolic.StrengthOfStrongestRhythmicPulseFeature(s)
+    >>> f = fe.extract()
+    >>> f.vector
+    [0.271...]
+
     '''
     id = 'R4'
 
@@ -1793,6 +1800,12 @@ class StrengthOfSecondStrongestRhythmicPulseFeature(
     >>> fe = features.jSymbolic.StrengthOfSecondStrongestRhythmicPulseFeature(sch)
     >>> fe.extract().vector[0]
     0.12...
+
+    >>> s = corpus.parse('bwv66.6')
+    >>> fe = features.jSymbolic.StrengthOfSecondStrongestRhythmicPulseFeature(s)
+    >>> f = fe.extract()
+    >>> f.vector
+    [0.261...]
     '''
     id = 'R5'
 
@@ -1830,6 +1843,12 @@ class StrengthRatioOfTwoStrongestRhythmicPulsesFeature(
     >>> fe.extract().vector[0]
     7.0
 
+    >>> s = corpus.parse('bwv66.6')
+    >>> fe = features.jSymbolic.StrengthRatioOfTwoStrongestRhythmicPulsesFeature(s)
+    >>> f = fe.extract()
+    >>> f.vector
+    [1.039...]
+
     '''
     id = 'R6'
 
@@ -1865,6 +1884,13 @@ class CombinedStrengthOfTwoStrongestRhythmicPulsesFeature(
     >>> fe = features.jSymbolic.CombinedStrengthOfTwoStrongestRhythmicPulsesFeature(sch)
     >>> fe.extract().vector[0]
     0.975...
+
+    >>> s = corpus.parse('bwv66.6')
+    >>> for p in s.parts:
+    ...     p.insert(0, tempo.MetronomeMark(number=120))
+    >>> fe = features.jSymbolic.CombinedStrengthOfTwoStrongestRhythmicPulsesFeature(s)
+    >>> fe.extract().vector
+    [0.533...]
     '''
     id = 'R7'
 
