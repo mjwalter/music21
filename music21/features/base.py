@@ -492,7 +492,9 @@ class StreamForms:
         # filter only notes; all elements would otherwise be gathered
         for bundle in secondsMap:
             if 'NotRest' in bundle['element'].classes:
-                post.append(bundle)
+                # Don't add grace notes to secondsMap
+                if bundle['element'].duration.linked:
+                    post.append(bundle)
         return post
 
     def formBeatHistogram(self, secondsMap):
