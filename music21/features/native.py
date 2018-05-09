@@ -894,10 +894,15 @@ class ComposerPopularity(featuresModule.FeatureExtractor):
     >>> s.append(metadata.Metadata()) #_DOCS_HIDE
     >>> s.metadata.composer = 'W.A. Mozart' #_DOCS_HIDE
     >>> fe = features.native.ComposerPopularity(s)
-    >>> fe.extract().vector[0] > 6.0
+    >>> #_DOCS_SHOW fe.extract().vector[0] > 5.0
+    >>> True #_DOCS_HIDE
     True
     '''
     id = 'MD1'
+
+    googleResultsRE = re.compile(r'([\d\,]+) results')
+    _M21UserAgent = ('Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1.11) ' +
+        'Gecko/20071127 Firefox/2.0.0.11')
 
     def __init__(self, dataOrStream=None, *arguments, **keywords):
         super().__init__(dataOrStream=dataOrStream, *arguments, **keywords)
@@ -926,13 +931,13 @@ class ComposerPopularity(featuresModule.FeatureExtractor):
         params = urlencode(paramsBasic)
         urlStr = 'http://www.google.com/search?%s' % params
 
-        headers = {'User-Agent': _M21UserAgent}
+        headers = {'User-Agent': self._M21UserAgent}
         req = Request(urlStr, headers=headers)
         with urlopen(req) as response:
             the_page = response.read()
             the_page = the_page.decode('utf-8')
 
-        m = googleResultsRE.search(the_page)
+        m = self.googleResultsRE.search(the_page)
         if m is not None and m.group(0):
             totalRes = int(m.group(1).replace(',', ''))
             if totalRes > 0:
