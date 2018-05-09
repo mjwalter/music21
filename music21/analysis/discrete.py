@@ -21,7 +21,7 @@ The :class:`music21.analysis.discrete.KrumhanslSchmuckler`
 (for algorithmic key detection) and
 :class:`music21.analysis.discrete.Ambitus` (for pitch range analysis) provide examples.
 '''
-#TODO: make an analysis.base for the Discrete and analyzeStream aspects, then create
+# TODO: make an analysis.base for the Discrete and analyzeStream aspects, then create
 # range and key modules in analysis
 
 import unittest
@@ -44,6 +44,7 @@ environLocal = environment.Environment(_MOD)
 class DiscreteAnalysisException(exceptions21.Music21Exception):
     pass
 
+
 class DiscreteAnalysis:
     ''' Parent class for analytical methods.
 
@@ -56,6 +57,7 @@ class DiscreteAnalysis:
     # define in subclass
     name = ''
     identifiers = []
+
     def __init__(self, referenceStream=None):
         # store a reference stream if needed
         self._referenceStream = referenceStream
@@ -115,7 +117,6 @@ class DiscreteAnalysis:
             value = 255
         return value
 
-
     def clearSolutionsFound(self):
         '''
         Clear all stored solutions
@@ -154,7 +155,6 @@ class DiscreteAnalysis:
         '''
         pass
 
-
     def solutionUnitString(self):
         '''
         Return a string describing the solution values. Used in Legend formation.
@@ -174,7 +174,6 @@ class DiscreteAnalysis:
         Expected return is a solution (method specific) and a color value.
         '''
         pass
-
 
     def getSolution(self, subStream):
         '''
@@ -210,7 +209,7 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
                       'G-', 'G',
                       'A-', 'A',
                       'B-', 'B',
-                    )
+                      )
 
     keysValidMinor = ('C', 'C#',
                       'D', 'D#',
@@ -219,7 +218,7 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
                       'G', 'G#',
                       'A-', 'A', 'A#',
                       'B-', 'B',
-                    )
+                      )
 
     def __init__(self, referenceStream=None):
         super().__init__(referenceStream=referenceStream)
@@ -247,13 +246,13 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
         # names taken from http://chaos2.org/misc/rgb.html
         # idea is basically:
         # red, orange, yellow, green, cyan, blue, purple, pink
-        stepLib = {'C': '#CD4F39', # tomato3
-                   'D': '#DAA520', # goldenrod
-                   'E': '#BCEE68', # DarkOliveGreen2
-                   'F': '#96CDCD', # PaleTurquoise3
-                   'G': '#6495ED', # cornflower blue
-                   'A': '#8968CD', # MediumPurple3
-                   'B': '#FF83FA', # orchid1
+        stepLib = {'C': '#CD4F39',  # tomato3
+                   'D': '#DAA520',  # goldenrod
+                   'E': '#BCEE68',  # DarkOliveGreen2
+                   'F': '#96CDCD',  # PaleTurquoise3
+                   'G': '#6495ED',  # cornflower blue
+                   'A': '#8968CD',  # MediumPurple3
+                   'B': '#FF83FA',  # orchid1
                    }
 
         for dst, valid in [(self.majorKeyColors, self.keysValidMajor),
@@ -261,13 +260,13 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
             for validKey in valid:
                 # convert to pitch object
                 validKey = pitch.Pitch(validKey)
-                step = validKey.step # get C for C#
+                step = validKey.step  # get C for C#
                 rgbStep = self._hexToRgb(stepLib[step])
                 # make all the colors a bit lighter
                 for i in range(len(rgbStep)):
                     rgbStep[i] = self._rgbLimit(rgbStep[i] + 50)
 
-                #make minor darker
+                # make minor darker
                 if valid == self.keysValidMinor:
                     for i in range(len(rgbStep)):
                         rgbStep[i] = self._rgbLimit(rgbStep[i] - 100)
@@ -285,7 +284,6 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
                         rgbStep[i] = self._rgbLimit(rgbStep[i] + shiftLib[i])
                 # add to dictionary
                 dst[validKey.name] = self._rgbToHex(rgbStep)
-
 
     def _getSharpFlatCount(self, subStream):
         '''
@@ -350,7 +348,7 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
         [3.0, 0, 1.5, 0, 1.5, 0, 2.0, 0, 0, 0, 1.5, 0]
         '''
         # storage for 12 pitch classes
-        pcDist = [0] * 12
+        pcDist = [0]*12
         if not streamObj.notes:
             return None
 
@@ -446,7 +444,7 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
                          'G-', 'G', 'G#',
                          'A-', 'A', 'A#',
                          'B-', 'B',
-                        ]
+                         ]
         if compress:
             colorsUsed = self.getColorsUsed()
             solutionsUsed = self.getSolutionsUsed()
@@ -454,10 +452,10 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
             #environLocal.printDebug(['colors used:', colorsUsed])
             keySortOrderFiltered = []
             for keyEl in _keySortOrder:
-                for sol in solutionsUsed: # three values
+                for sol in solutionsUsed:  # three values
                     if sol[0] is None:
                         continue
-                    if keyEl == sol[0].name: # first is key string
+                    if keyEl == sol[0].name:  # first is key string
                         keySortOrderFiltered.append(keyEl)
                         break
         else:
@@ -475,8 +473,8 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
             for keyPitch in [pitch.Pitch(p) for p in keySortOrderFiltered]:
                 try:
                     color = self.solutionToColor([keyPitch, yLabel])
-                except KeyError: # no such color defined; expected in a few
-                    color = None # will be masked
+                except KeyError:  # no such color defined; expected in a few
+                    color = None  # will be masked
                 mask = False
                 if compress:
                     if color not in colorsUsed:
@@ -504,7 +502,6 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
         Return a string describing the solution values. Used in Legend formation.
         '''
         return 'Keys'
-
 
     def solutionToColor(self, solution):
         '''
@@ -670,7 +667,6 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
         return k
 
 
-
 #------------------------------------------------------------------------------
 # specialize subclass by class
 
@@ -681,9 +677,9 @@ class KrumhanslSchmuckler(KeyWeightKeyAnalysis):
     '''
     _DOC_ALL_INHERITED = False
     name = 'Krumhansl Schmuckler Key Analysis'
-    identifiers = ['key.krumhansl', 'key.schmuckler',  'key.krumhansl-schmuckler',
+    identifiers = ['key.krumhansl', 'key.schmuckler', 'key.krumhansl-schmuckler',
                    'key.krumhanslschmuckler',
-                   'krumhansl', 'schmuckler',  'krumhansl-schmuckler',
+                   'krumhansl', 'schmuckler', 'krumhansl-schmuckler',
                    'krumhanslschmuckler',
                    ]
 
@@ -792,11 +788,10 @@ class AardenEssen(KeyWeightKeyAnalysis):
         12
         '''
         weightType = weightType.lower()
-        # note: only one value is different from KrumhanslSchmuckler
         if weightType == 'major':
             return [17.7661, 0.145624, 14.9265, 0.160186, 19.8049, 11.3587,
-                0.291248, 22.062, 0.145624,
-                8.15494, 0.232998, 4.95122]
+                    0.291248, 22.062, 0.145624,
+                    8.15494, 0.232998, 4.95122]
         elif weightType == 'minor':
             return [18.2648, 0.737619, 14.0499, 16.8599, 0.702494, 14.4362,
                     0.702494, 18.6161, 4.56621, 1.93186, 7.37619, 1.75623]
@@ -881,7 +876,6 @@ class BellmanBudge(KeyWeightKeyAnalysis):
             raise DiscreteAnalysisException('no weights defined for weight type: %s' % weightType)
 
 
-
 class TemperleyKostkaPayne(KeyWeightKeyAnalysis):
     '''
     Implementation of Temperley-Kostka-Payne weightings for Krumhansl-Schmuckler
@@ -922,6 +916,7 @@ class TemperleyKostkaPayne(KeyWeightKeyAnalysis):
         else:
             raise DiscreteAnalysisException('no weights defined for weight type: %s' % weightType)
 
+
 # store a constant with all classes
 keyWeightKeyAnalysisClasses = [KrumhanslSchmuckler, KrumhanslKessler,
                                AardenEssen, SimpleWeights, BellmanBudge, TemperleyKostkaPayne]
@@ -947,7 +942,6 @@ class Ambitus(DiscreteAnalysis):
         self._pitchSpanColors = OrderedDict()
         self._generateColors()
 
-
     def _generateColors(self, numColors=None):
         '''
         Provide uniformly distributed colors across the entire range.
@@ -967,23 +961,23 @@ class Ambitus(DiscreteAnalysis):
                 # get total range for entire piece
                 minPitch, maxPitch = self.getPitchRanges(self._referenceStream)
             else:
-                minPitch, maxPitch = 0, 130 # a large default
-        else: # create minPitch maxPitch
+                minPitch, maxPitch = 0, 130  # a large default
+        else:  # create minPitch maxPitch
             minPitch, maxPitch = 0, numColors
 
         valueRange = maxPitch - minPitch
         if valueRange == 0:
-            valueRange = 1 # avoid float division by zero
+            valueRange = 1  # avoid float division by zero
         step = 0
         antiBlack = 25
         for i in range(minPitch, maxPitch + 1):
             # do not use all 255 to avoid going to black
-            val = round(((255.0 - antiBlack)/ valueRange) * step) + antiBlack
+            val = round(((255.0 - antiBlack) / valueRange) * step) + antiBlack
             # store in dictionary the accepted values, not the step
             self._pitchSpanColors[i] = self._rgbToHex(((val*.75), (val*.6), val))
             step += 1
 
-        #environLocal.printDebug([self._pitchSpanColors])
+        # environLocal.printDebug([self._pitchSpanColors])
 
     def getPitchSpan(self, subStream):
         '''
@@ -1017,7 +1011,7 @@ class Ambitus(DiscreteAnalysis):
         psFound = []
         pitchesFound = []
         for n in justNotes:
-            #environLocal.printDebug([n])
+            # environLocal.printDebug([n])
             pitches = []
             if 'Chord' in n.classes and 'ChordSymbol' not in n.classes:
                 pitches = n.pitches
@@ -1033,7 +1027,6 @@ class Ambitus(DiscreteAnalysis):
         maxPitchIndex = psFound.index(max(psFound))
 
         return pitchesFound[minPitchIndex], pitchesFound[maxPitchIndex]
-
 
     def getPitchRanges(self, subStream):
         '''
@@ -1086,7 +1079,6 @@ class Ambitus(DiscreteAnalysis):
         else:
             return (int(min(psRange)), int(max(psRange)))
 
-
     def solutionLegend(self, compress=False):
         '''
         Return legend data.
@@ -1129,7 +1121,7 @@ class Ambitus(DiscreteAnalysis):
 
         data = []
 
-        colors = {} # a filtered dictionary
+        colors = {}  # a filtered dictionary
         for i in range(len(self._pitchSpanColors.keys())):
             if compress:
                 if self._pitchSpanColors[i] not in colorsUsed:
@@ -1146,10 +1138,10 @@ class Ambitus(DiscreteAnalysis):
         # split keys into two groups for two rows (optional)
         for keyGroup in [keysTopRow, keysBottomRow]:
             row = []
-            row.append('') # empty row label
+            row.append('')  # empty row label
             pairs = []
             for i in keyGroup:
-                color = colors[i] # get form colors
+                color = colors[i]  # get form colors
                 pairs.append((i, color))
             row.append(pairs)
             data.append(row)
@@ -1161,7 +1153,6 @@ class Ambitus(DiscreteAnalysis):
         Return a string describing the solution values. Used in Legend formation.
         '''
         return 'Half-Steps'
-
 
     def solutionToColor(self, result):
         '''
@@ -1179,7 +1170,6 @@ class Ambitus(DiscreteAnalysis):
             return self._rgbToHex((255, 255, 255))
 
         return self._pitchSpanColors[result]
-
 
     def process(self, sStream):
         '''
@@ -1204,7 +1194,6 @@ class Ambitus(DiscreteAnalysis):
         self.solutionsFound.append((solution, color))
         return solution, color
 
-
     def getSolution(self, sStream):
         '''
         Procedure to only return an Inteval object.
@@ -1216,8 +1205,6 @@ class Ambitus(DiscreteAnalysis):
         '''
         solution, unused_color = self.process(sStream)
         return solution
-
-
 
 
 #------------------------------------------------------------------------------
@@ -1233,7 +1220,6 @@ class MelodicIntervalDiversity(DiscreteAnalysis):
 
     def __init__(self, referenceStream=None):
         super().__init__(referenceStream=referenceStream)
-
 
     def solutionToColor(self, solution):
         # TODO: map diversity to color span
@@ -1256,13 +1242,13 @@ class MelodicIntervalDiversity(DiscreteAnalysis):
         # if this has parts, need to move through each at a time
         if sStream.hasPartLikeStreams():
             procList = [s for s in sStream.getElementsByClass('Stream')]
-        else: # assume a single list of notes
+        else:  # assume a single list of notes
             procList = [sStream]
 
         for p in procList:
             # get only Notes for now, skipping rests and chords
             noteStream = p.stripTies(inPlace=False).getElementsByClass('Note').stream()
-            #noteStream.show()
+            # noteStream.show()
             for i, n in enumerate(noteStream):
                 if i <= len(noteStream) - 2:
                     nNext = noteStream[i + 1]
@@ -1272,7 +1258,7 @@ class MelodicIntervalDiversity(DiscreteAnalysis):
                 if nNext is not None:
                     #environLocal.printDebug(['creating interval from notes:', n, nNext, i])
                     i = interval.notesToInterval(n, nNext)
-                    if ignoreUnison: # will apply to enharmonic eq unisons
+                    if ignoreUnison:  # will apply to enharmonic eq unisons
                         if i.chromatic.semitones == 0:
                             continue
                     if ignoreDirection:
@@ -1283,7 +1269,7 @@ class MelodicIntervalDiversity(DiscreteAnalysis):
                     if i.directedName not in found:
                         found[i.directedName] = [i, 1]
                     else:
-                        found[i.directedName][1] += 1 # increment counter
+                        found[i.directedName][1] += 1  # increment counter
 
 #         def compare(x, y):
 #             return abs(x.chromatic.semitones) - abs(y.chromatic.semitones)
@@ -1297,7 +1283,6 @@ class MelodicIntervalDiversity(DiscreteAnalysis):
         '''
         uniqueIntervals = self.countMelodicIntervals(sStream, ignoreDirection)
         return len(uniqueIntervals), self.solutionToColor(len(uniqueIntervals))
-
 
     def getSolution(self, sStream):
         '''Solution is the number of unique intervals.
@@ -1351,12 +1336,13 @@ def analyzeStream(streamObj, *args, **keywords):
     match = analysisClassFromMethodName(method)
 
     if match is not None:
-        obj = match() # NOTE: Cuthbert, this was previously analysisClassName()? - out of scope
+        obj = match()  # NOTE: Cuthbert, this was previously analysisClassName()? - out of scope
         #environLocal.printDebug(['analysis method used:', obj])
         return obj.getSolution(streamObj)
 
     # if no match raise error
     raise DiscreteAnalysisException('no such analysis method: %s' % method)
+
 
 def analysisClassFromMethodName(method):
     '''
@@ -1471,7 +1457,7 @@ class Test(unittest.TestCase):
 
         mid = MelodicIntervalDiversity()
         s = corpus.parse('corelli/opus3no1/1grave')
-        #s.show()
+        # s.show()
 
         midDict = mid.countMelodicIntervals(s.parts[1])
         self.assertEqual(len(midDict), 9)
@@ -1479,7 +1465,6 @@ class Test(unittest.TestCase):
         self.assertEqual(str(midDict['P4']), "[<music21.interval.Interval P4>, 7]")
         self.assertEqual(str(midDict['m3']), "[<music21.interval.Interval m3>, 1]")
         self.assertEqual(str(midDict['M2']), "[<music21.interval.Interval M2>, 21]")
-
 
         midDict = mid.countMelodicIntervals(s)
         self.assertEqual(len(midDict), 10)
@@ -1492,7 +1477,6 @@ class Test(unittest.TestCase):
         self.assertEqual(str(midDict['m3']), "[<music21.interval.Interval m3>, 12]")
         self.assertEqual(str(midDict['M2']), "[<music21.interval.Interval M2>, 79]")
         self.assertEqual(str(midDict['m2']), "[<music21.interval.Interval m2>, 43]")
-
 
     def testKeyAnalysisSpelling(self):
         from music21 import stream, note
@@ -1581,5 +1565,3 @@ if __name__ == "__main__":
 
 #------------------------------------------------------------------------------
 # eof
-
-
