@@ -698,7 +698,7 @@ class KrumhanslSchmuckler(KeyWeightKeyAnalysis):
         '''
         weightType = weightType.lower()
         if weightType == 'major':
-            original_weights = [6.35, 2.33, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88]
+            original_weights = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88]
             # Krumhansl worked on a 1-7 scale. Subtract 1 to get a scale from 0.
             return [x - 1 for x in original_weights]
         elif weightType == 'minor':
