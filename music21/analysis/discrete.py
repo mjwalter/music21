@@ -318,11 +318,9 @@ class KeyWeightKeyAnalysis(DiscreteAnalysis):
         '''
         weightType = weightType.lower()
         if weightType == 'major':
-            # -1 from Krumhansl to make 0-6 scale instead of 1-7
-            return [5.35, 1.33, 2.48, 1.33, 3.38, 3.09, 1.52, 4.19, 1.39, 2.66, 1.29, 1.88]
+            return [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88]
         elif weightType == 'minor':
-            # -1 from Krumhansl to make 0-6 scale instead of 1-7
-            return [5.33, 1.68, 2.52, 4.38, 1.60, 2.53, 1.54, 3.75, 2.98, 1.69, 2.34, 2.17]
+            return [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17]
         else:
             raise DiscreteAnalysisException('no weights defined for weight type: %s' % weightType)
 
